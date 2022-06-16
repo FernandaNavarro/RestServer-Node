@@ -1,5 +1,6 @@
 const express = require('express')
-var cors = require('cors')
+var cors = require('cors');
+const { dbConnection } = require('../database/config');
 
 class Server{
     constructor(){
@@ -7,12 +8,20 @@ class Server{
         this.port = process.env.PORT;
         this.usuariosPath = '/api/usuarios';
 
+        //Conectar a BD
+        this.conectarBD();
+
         //Middlewares
         this.middlewares();
 
         //Rutas de aplicación 
         this.routes();
     }
+
+    async conectarBD(){
+        await dbConnection();
+    }
+
 
     middlewares(){
 
@@ -34,7 +43,7 @@ class Server{
 
     listen(){
         this.app.listen(this.port, () => {
-            console.log('************ Servidor corriendo en el puerto ************', this.port);
+            console.log('Servidor corriendo en el puerto:', this.port);
         });
     }
 }
